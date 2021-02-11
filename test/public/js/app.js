@@ -4,8 +4,10 @@ const sendit = new SendIt({
     shouldCache: true
 });
 
-let response = await sendit.get('/text', { name: "test", age: "12" }, 'text');
+let response1 = await sendit.get('/text', { name: "test", age: "12" }, 'text');
+let { status, error, response } = await sendit.post('/json', {});
 
-console.table(response);
+console.table(response1);
+console.log(response);
 
 console.log(sendit);

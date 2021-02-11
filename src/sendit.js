@@ -38,7 +38,69 @@ export class SendIt {
             }
         };
         //fetch
+        let parsedBody;
         let response = await fetch(path + queryString)
+            .then(async (response) => {
+                switch(type) {
+                    case 'json':
+                        parsedBody = await response.json();
+                        if(this.shouldCache) this.cache[path + queryString] = parsedBody;
+                        return {
+                            status: 'ok',
+                            error: {},
+                            response: parsedBody
+                        }
+                    case 'text':
+                        parsedBody = await response.text();
+                        if(this.shouldCache) this.cache[path + queryString] = parsedBody;
+                        return {
+                            status: 'ok',
+                            error: {},
+                            response: parsedBody
+                        }
+                    default:
+                        parsedBody = await response.json();
+                        if(this.shouldCache) this.cache[path + queryString] = parsedBody;
+                        return {
+                            status: 'ok',
+                            error: {},
+                            response: parsedBody
+                        }
+                }
+            })
+            .catch((error) => {
+                if(error) {
+                    return {
+                        status: 'failed',
+                        error: {
+                            code: '',
+                            description: 'Fetch could not be completed. Server did not respond.'
+                        },
+                        response: {}
+                    }
+                }
+            });
+        return response;
+    }
+
+    async post(path = '', body = {}, type = 'json') {
+        if(path === '' || typeof path !== 'string') return new Error('Path cannot be empty xor must be type of string.');
+        if(typeof body !== 'object') return new Error(`Typeof body must be object, got ${typeof object} instead.`);
+        if(!navigator.onLine) {
+            return {
+                status: 'failed',
+                error: {
+                    code: '',
+                    description: 'Could not fetch. Device is not online. Please check the internet connection.'
+                },
+                response: {}
+            }
+        }
+
+        let response = await fetch(path, {
+            method: 'POST',
+            body: JSON.stringify(body)
+        })
             .then(async (response) => {
                 switch(type) {
                     case 'json':
