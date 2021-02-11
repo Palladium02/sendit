@@ -1,6 +1,6 @@
 # SendIt
 
-SendIt is JS library make the use of js build-in function fetch easier.
+SendIt is JS library to make the use of js build-in function fetch easier.
 
 ## Getting started
 
@@ -48,7 +48,3 @@ let { status, error, response } = sendit.get('/path', {}, 'text');
 ```
 
 You can use object deconstructuring to get the single values.
-
-{
-    
-}
