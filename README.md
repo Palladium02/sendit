@@ -1,6 +1,6 @@
 # SendIt
 
-SendIt is JS library to make the use of js build-in function fetch easier.
+SendIt is a JS library to make the use of js build-in function fetch easier.
 
 ## Getting started
 
@@ -40,11 +40,35 @@ to the given route.
 |name|type|values|description|
 |---|---|---|---|
 |status|String|'ok', 'failed'|Gives information about wether an error occured or not.|
-|error|Object|~|Contains a error code and a descrption of the error that occured.|
+|error|Object|~|Contains a error code and a description of the error that occured.|
 |response|Object or Text|~|Contains the parsed response body.|
 
 ```js
+let yourResponse = sendit.get('/path', {}, 'text');
 let { status, error, response } = sendit.get('/path', {}, 'text');
 ```
 
-You can use object deconstructuring to get the single values.
+You can use object deconstructuring to get the single values. This method might cause interferiances with variable name when
+using sendit more than once.
+
+## SendIt.post()
+
+```js
+sendit.post('/path', {}, 'json');
+```
+
+### Parameter
+
+|name|type|default|description|
+|---|---|---|---|
+|path|String|''|Specifies the path the request goes to. Cannot be empty|
+|params|Object|{}|Specifies the request body.|
+|type|String|'json'|Specifies the type of response you are awaiting and parses it accordingly.|
+
+### Return values
+
+|name|type|values|description|
+|---|---|---|---|
+|status|String|'ok', 'failed'|Gives information about wether an error occured or not.|
+|error|Object|~|Contains a error code and a description of the error that occured.|
+|response|Object or Text|~|Contains the parsed response body.|
