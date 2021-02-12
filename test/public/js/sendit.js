@@ -11,30 +11,30 @@ export class SendIt {
         if(!navigator.onLine) {
             if(this.shouldCache) {
                 if(this.cache[path + queryString]) {
-                    return {
-                        status: 'failed',
-                        error: {
+                    return [
+                        'failed',
+                        {
                             code: '',
                             description: 'Could not fetch. Device is not online. Please check the internet connection.'
                         },
-                        response: this.cache[path + queryString]
-                    }
+                        this.cache[path + queryString]
+                    ]
                 } else {
-                    return {
-                        status: 'failed',
-                        error: { code: '', description: `Could not fetch. Device is not online. Please check the internet conncetion. No data in cache for route: ${path} with parameters: ${queryString}` },
-                        response: {}
-                    }
+                    return [
+                        'failed',
+                        { code: '', description: `Could not fetch. Device is not online. Please check the internet conncetion. No data in cache for route: ${path} with parameters: ${queryString}` },
+                        {}
+                    ]
                 }
             } else {
-                return {
-                    status: 'failed',
-                    error: {
+                return [
+                    'failed',
+                    {
                         code: '',
                         description: 'Could not fetch. Device is not online. Please check the internet connection.'
                     },
-                    response: {}
-                }
+                    {}
+                ]
             }
         };
         //fetch
@@ -45,27 +45,27 @@ export class SendIt {
                     case 'json':
                         parsedBody = await response.json();
                         if(this.shouldCache) this.cache[path + queryString] = parsedBody;
-                        return {
-                            status: 'ok',
-                            error: {},
-                            response: parsedBody
-                        }
+                        return [
+                            'ok',
+                            {},
+                            parsedBody
+                        ]
                     case 'text':
                         parsedBody = await response.text();
                         if(this.shouldCache) this.cache[path + queryString] = parsedBody;
-                        return {
-                            status: 'ok',
-                            error: {},
-                            response: parsedBody
-                        }
+                        return  [
+                            'ok',
+                            {},
+                            parsedBody
+                        ]
                     default:
                         parsedBody = await response.json();
                         if(this.shouldCache) this.cache[path + queryString] = parsedBody;
-                        return {
-                            status: 'ok',
-                            error: {},
-                            response: parsedBody
-                        }
+                        return  [
+                            'ok',
+                            {},
+                            parsedBody
+                        ]
                 }
             })
             .catch((error) => {
@@ -104,26 +104,34 @@ export class SendIt {
             .then(async (response) => {
                 switch(type) {
                     case 'json':
-                        return {
-                            status: 'ok',
-                            error: {},
-                            response: await response.json()
-                        }
+                        return [
+                            'ok',
+                            {},
+                            await response.json()
+                        ]
                     case 'text':
-                        return {
-                            status: 'ok',
-                            error: {},
-                            response: await response.text()
-                        }
+                        return [
+                            'ok',
+                            {},
+                            await response.text()
+                        ]
                     default:
-                        return {
-                            status: 'ok',
-                            error: {},
-                            response: await response.json()
-                        }
+                        return [
+                            'ok',
+                            {},
+                            await response.json()
+                        ]
                 }
             })
             .catch((error) => {
+                return [
+                    'ok',
+                    {
+                        code: '',
+                        description: 'Fetch could not be completed. Server did not respond.'
+                    },
+                    {}
+                ]
                 return {
                     status: 'failed',
                     error: {

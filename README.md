@@ -45,11 +45,10 @@ to the given route.
 
 ```js
 let yourResponse = sendit.get('/path', {}, 'text');
-let { status, error, response } = sendit.get('/path', {}, 'text');
+let [ status, error, response ] = sendit.get('/path', {}, 'text');
 ```
 
-You can use object deconstructuring to get the single values. This method might cause interferiances with variable name when
-using sendit more than once.
+You can use array deconstructuring to get the single values.
 
 ## SendIt.post()
 
