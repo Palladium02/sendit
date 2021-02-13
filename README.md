@@ -21,7 +21,7 @@ let sendit = new SendIt({
 ## SendIt.get()
 
 ```js
-sendit.get('/path', {}, 'text');
+sendit.get('/path', {}, {},'text');
 ```
 
 Assuming you are following along the code snippets, the snippet above performs a get-request
@@ -33,6 +33,7 @@ to the given route.
 |---|---|---|---|
 |path|String|''|Specifies the path the request goes to. Cannot be empty|
 |params|Object|{}|Specifies the URL parameters in key value pairs. The querystring is built automatically.|
+|headers|Object|{}|Specifies the request headers.|
 |type|String|'json'|Specifies the type of response you are awaiting and parses it accordingly.|
 
 ### Return values
@@ -44,8 +45,8 @@ to the given route.
 |response|Object or Text|~|Contains the parsed response body.|
 
 ```js
-let yourResponse = sendit.get('/path', {}, 'text');
-let [ status, error, response ] = sendit.get('/path', {}, 'text');
+let yourResponse = sendit.get('/path', {}, {},'text');
+let [ status, error, response ] = sendit.get('/path', {}, {}, 'text');
 ```
 
 You can use array deconstructuring to get the single values.
@@ -53,7 +54,7 @@ You can use array deconstructuring to get the single values.
 ## SendIt.post()
 
 ```js
-sendit.post('/path', {}, 'json');
+sendit.post('/path', {}, {},'json');
 ```
 
 ### Parameter
@@ -62,6 +63,7 @@ sendit.post('/path', {}, 'json');
 |---|---|---|---|
 |path|String|''|Specifies the path the request goes to. Cannot be empty|
 |params|Object|{}|Specifies the request body.|
+|headers|Object|{}|Specifies the request headers.|
 |type|String|'json'|Specifies the type of response you are awaiting and parses it accordingly.|
 
 ### Return values
