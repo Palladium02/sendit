@@ -4,68 +4,68 @@ export class SendIt {
         this.cache = {};
     }
 
-    async get(path = '', params = {}, type = 'json') {
+    async get(path = '', params = {}, headers = {}, type = 'json') {
         if(path === '' || typeof path !== 'string') return new Error('Path cannot be empty xor must be type of string.');
         let queryString = this.#buildQueryString(params);
         // catch if user is offline
         if(!navigator.onLine) {
             if(this.shouldCache) {
                 if(this.cache[path + queryString]) {
-                    return {
-                        status: 'failed',
-                        error: {
+                    return [
+                        'failed',
+                        {
                             code: '',
                             description: 'Could not fetch. Device is not online. Please check the internet connection.'
                         },
-                        response: this.cache[path + queryString]
-                    }
+                        this.cache[path + queryString]
+                    ]
                 } else {
-                    return {
-                        status: 'failed',
-                        error: { code: '', description: `Could not fetch. Device is not online. Please check the internet conncetion. No data in cache for route: ${path} with parameters: ${queryString}` },
-                        response: {}
-                    }
+                    return [
+                        'failed',
+                        { code: '', description: `Could not fetch. Device is not online. Please check the internet conncetion. No data in cache for route: ${path} with parameters: ${queryString}` },
+                        {}
+                    ]
                 }
             } else {
-                return {
-                    status: 'failed',
-                    error: {
+                return [
+                    'failed',
+                    {
                         code: '',
                         description: 'Could not fetch. Device is not online. Please check the internet connection.'
                     },
-                    response: {}
-                }
+                    {}
+                ]
             }
         };
         //fetch
         let parsedBody;
-        let response = await fetch(path + queryString)
+        let response = await fetch(path + queryString, { method: 'get', headers: headers })
             .then(async (response) => {
                 switch(type) {
                     case 'json':
                         parsedBody = await response.json();
                         if(this.shouldCache) this.cache[path + queryString] = parsedBody;
-                        return {
-                            status: 'ok',
-                            error: {},
-                            response: parsedBody
-                        }
+                        return [
+                            'ok',
+                            {},
+                            parsedBody
+                        ]
                     case 'text':
                         parsedBody = await response.text();
                         if(this.shouldCache) this.cache[path + queryString] = parsedBody;
-                        return {
-                            status: 'ok',
-                            error: {},
-                            response: parsedBody
-                        }
+                        return  [
+                            'ok',
+                            {},
+                            parsedBody
+                        ]
                     default:
                         parsedBody = await response.json();
                         if(this.shouldCache) this.cache[path + queryString] = parsedBody;
-                        return {
-                            status: 'ok',
-                            error: {},
-                            response: parsedBody
-                        }
+                        return  [
+                            'ok',
+                            {},
+                            parsedBody
+                        ]
                 }
             })
             .catch((error) => {
@@ -83,7 +83,7 @@ export class SendIt {
         return response;
     }
 
-    async post(path = '', body = {}, type = 'json') {
+    async post(path = '', body = {}, headers = {}, type = 'json') {
         if(path === '' || typeof path !== 'string') return new Error('Path cannot be empty xor must be type of string.');
         if(typeof body !== 'object') return new Error(`Typeof body must be object, got ${typeof object} instead.`);
         if(!navigator.onLine) {
@@ -99,31 +99,40 @@ export class SendIt {
 
         let response = await fetch(path, {
             method: 'POST',
+            headers: headers,
             body: JSON.stringify(body)
         })
             .then(async (response) => {
                 switch(type) {
                     case 'json':
-                        return {
-                            status: 'ok',
-                            error: {},
-                            response: await response.json()
-                        }
+                        return [
+                            'ok',
+                            {},
+                            await response.json()
+                        ]
                     case 'text':
-                        return {
-                            status: 'ok',
-                            error: {},
-                            response: await response.text()
-                        }
+                        return [
+                            'ok',
+                            {},
+                            await response.text()
+                        ]
                     default:
-                        return {
-                            status: 'ok',
-                            error: {},
-                            response: await response.json()
-                        }
+                        return [
+                            'ok',
+                            {},
+                            await response.json()
+                        ]
                 }
             })
             .catch((error) => {
+                return [
+                    'ok',
+                    {
+                        code: '',
+                        description: 'Fetch could not be completed. Server did not respond.'
+                    },
+                    {}
+                ]
                 return {
                     status: 'failed',
                     error: {

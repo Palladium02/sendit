@@ -4,7 +4,7 @@ export class SendIt {
         this.cache = {};
     }
 
-    async get(path = '', params = {}, type = 'json') {
+    async get(path = '', params = {}, headers = {}, type = 'json') {
         if(path === '' || typeof path !== 'string') return new Error('Path cannot be empty xor must be type of string.');
         let queryString = this.#buildQueryString(params);
         // catch if user is offline
@@ -39,7 +39,7 @@ export class SendIt {
         };
         //fetch
         let parsedBody;
-        let response = await fetch(path + queryString)
+        let response = await fetch(path + queryString, { method: 'get', headers: headers })
             .then(async (response) => {
                 switch(type) {
                     case 'json':
@@ -83,7 +83,7 @@ export class SendIt {
         return response;
     }
 
-    async post(path = '', body = {}, type = 'json') {
+    async post(path = '', body = {}, headers = {}, type = 'json') {
         if(path === '' || typeof path !== 'string') return new Error('Path cannot be empty xor must be type of string.');
         if(typeof body !== 'object') return new Error(`Typeof body must be object, got ${typeof object} instead.`);
         if(!navigator.onLine) {
@@ -99,6 +99,7 @@ export class SendIt {
 
         let response = await fetch(path, {
             method: 'POST',
+            headers: headers,
             body: JSON.stringify(body)
         })
             .then(async (response) => {
