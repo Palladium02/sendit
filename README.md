@@ -4,6 +4,9 @@ SendIt is a JS library to make the use of js build-in function fetch easier.
 
 ## Getting started
 
+This package is currently not available via npm. To use it simple
+you have to download the sendit.js from the src folder into your project.
+
 ## Creating an instance of SendIt
 
 ```js
